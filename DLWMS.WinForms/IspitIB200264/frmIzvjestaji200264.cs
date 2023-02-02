@@ -15,7 +15,7 @@ namespace DLWMS.WinForms.IspitIB200264
             dgvStudenti.AutoGenerateColumns = false;
             
             UcitajKontrole();
-            Ucitaj();
+            
         }
 
         private void UcitajKontrole()
@@ -25,8 +25,11 @@ namespace DLWMS.WinForms.IspitIB200264
 
         private void Ucitaj()
         {
+            
             var binding = new BindingSource();
+
             students.Clear();
+           
             students = db.Studenti.Include(st => st.Spol).ToList();
             students = db.Studenti.Where(filtriraj).ToList();
             for (int i = 0; i < students.Count(); i++)
@@ -34,7 +37,8 @@ namespace DLWMS.WinForms.IspitIB200264
                 var student = students[i];
                 student.imePrezime = $"{student.Ime} {student.Prezime}";
             }
-            binding.DataSource = students;
+            binding.DataSource = null;
+            binding.DataSource = students.ToList();
             dgvStudenti.DataSource = binding;
 
         }
@@ -42,7 +46,7 @@ namespace DLWMS.WinForms.IspitIB200264
         private void frmIzvjestaji200264_Load(object sender, EventArgs e)
         {
             
-            Ucitaj();
+            
         }
 
         private void txtPretraga_TextChanged(object sender, EventArgs e)
@@ -52,7 +56,10 @@ namespace DLWMS.WinForms.IspitIB200264
 
         private void cmbSpol_SelectedIndexChanged(object sender, EventArgs e)
         {
+            
             Ucitaj();
+            
+            
         }
 
         private void dtpOd_ValueChanged(object sender, EventArgs e)
@@ -105,6 +112,21 @@ namespace DLWMS.WinForms.IspitIB200264
         {
             var pretraga = txtPretraga.Text.ToLower();
             return st.Ime.ToLower().Contains(pretraga) || st.Prezime.ToLower().Contains(pretraga) || string.IsNullOrEmpty(pretraga);
+        }
+
+        private void dgvStudenti_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            Ucitaj();
+            if(e.ColumnIndex == 7)
+            {
+                var _student = dgvStudenti.Rows[e.RowIndex].DataBoundItem as Student;
+                //MessageBox.Show(_student.ToString());
+                var profil = new frmStudentProfil(_student);
+                profil.ShowDialog();
+            }
+
+
+
         }
     }
 }

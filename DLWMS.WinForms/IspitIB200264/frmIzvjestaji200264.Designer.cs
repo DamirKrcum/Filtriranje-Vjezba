@@ -161,8 +161,10 @@
             this.dgvStudenti.Name = "dgvStudenti";
             this.dgvStudenti.ReadOnly = true;
             this.dgvStudenti.RowTemplate.Height = 25;
-            this.dgvStudenti.Size = new System.Drawing.Size(961, 338);
+            this.dgvStudenti.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvStudenti.Size = new System.Drawing.Size(961, 367);
             this.dgvStudenti.TabIndex = 10;
+            this.dgvStudenti.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvStudenti_CellContentClick);
             // 
             // BrojIndeksa
             // 

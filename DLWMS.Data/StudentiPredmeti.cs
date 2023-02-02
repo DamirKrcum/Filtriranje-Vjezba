@@ -13,6 +13,10 @@ namespace DLWMS.Data
         public int Id { get; set; }
         public int StudentId { get; set; }
         public int PredmetId { get; set; }
+
+        public int Ocjena { get; set; }
         public DateTime Datum { get; set; }
+        
+        public Predmeti Predmet { get; set; }
     }
 }
