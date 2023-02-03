@@ -15,27 +15,27 @@ namespace DLWMS.WinForms.IspitIB200264
 {
     public partial class frmStudentProfil : Form
     {
-        private Student st;
+        private Student student;
         DLWMSDbContext db = new DLWMSDbContext();
               
 
         public frmStudentProfil(Student _odabraniStudent)
         {
             InitializeComponent();
-            this.st = _odabraniStudent;
+            this.student = _odabraniStudent;
             dgvPolozeni.AutoGenerateColumns = false;
             UcitajPodatke();
         }
 
         private void UcitajPodatke()
         {
-            pbSlikaStudenta.Image = ImageHelper.FromByteToImage(st.Slika);
-            txtIme.Text = st.Ime;
-            txtPrezime.Text = st.Prezime;
-            txtBrojIndeksa.Text = st.BrojIndeksa;
-            txtEmail.Text = st.Email;
-            dtpDatumRodjenja.Value= st.DatumRodjenja;
-            cbAktivan.Checked = st.Aktivan;
+            pbSlikaStudenta.Image = ImageHelper.FromByteToImage(student.Slika);
+            txtIme.Text = student.Ime;
+            txtPrezime.Text = student.Prezime;
+            txtBrojIndeksa.Text = student.BrojIndeksa;
+            txtEmail.Text = student.Email;
+            dtpDatumRodjenja.Value= student.DatumRodjenja;
+            cbAktivan.Checked = student.Aktivan;
             cbPredmet.DataSource = db.Predmeti.ToList();
 
             UcitajPolozene();
@@ -46,8 +46,19 @@ namespace DLWMS.WinForms.IspitIB200264
         private void UcitajPolozene()
         {
             var binding = new BindingSource();
-            binding.DataSource = null;
-            binding.DataSource = db.studentiPredmeti.Where(student => student.Id == st.Id).Include(pr => pr.Predmet).ToList();
+            binding.DataSource = db.studentiPredmeti.Include(pr => pr.Predmet).Where(st=>st.StudentId == student.Id).ToList();
+            // List<StudentiPredmeti> nova = new List<StudentiPredmeti>();
+            // for (int i = 0; i < lista.Count(); i++)
+            // {
+            //     if (lista[i].StudentId == st.Id)
+            //     {
+            //         nova.Add(lista[i]);
+            //     }
+            // 
+            // }
+            //var binding = new BindingSource();
+            //binding.DataSource = null;
+            //binding.DataSource = lista;
             dgvPolozeni.DataSource = binding;
             dgvPolozeni.Refresh();
         }
@@ -58,7 +69,7 @@ namespace DLWMS.WinForms.IspitIB200264
             polozeni.Ocjena = int.Parse(cmbOcjena.Text);
             polozeni.PredmetId = (cbPredmet.SelectedValue as Predmeti).id;
             polozeni.Datum = dtpDatumPolaganja.Value;
-            polozeni.StudentId= st.Id;
+            polozeni.StudentId= student.Id;
 
             db.studentiPredmeti.Add(polozeni);
             db.SaveChanges();
